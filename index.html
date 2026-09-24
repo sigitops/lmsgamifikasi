@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7C5CFF">
+  <meta name="description" content="Platform pembelajaran terpadu dan gamifikasi Program Keahlian Teknik Komputer &amp; Jaringan, SMK HKTI 2 Purwareja Klampok.">
+  <meta name="robots" content="noindex">
+  <title>GAS LMS — SMK HKTI 2 Purwareja Klampok</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='26' fill='%237C5CFF'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='sans-serif' font-weight='800' fill='white'>R</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Ikon SVG garis & grafik -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+</head>
+
+<body>
+
+<!-- ══ Pemuatan awal ═══════════════════════════════════════════════════ -->
+<div id="bootScreen" class="loading-overlay">
+  <div class="spinner" role="status" aria-label="Memuat aplikasi"></div>
+  <p class="text-sm text-muted">Menyiapkan ruang belajar…</p>
+</div>
+
+<!-- ══ Layar autentikasi ═══════════════════════════════════════════════ -->
+<div id="authScreen" class="auth-wrap hide">
+  <div class="auth-card">
+    <div class="auth-mark">R</div>
+    <div class="text-center mb-md">
+      <div class="row" style="justify-content:center;gap:8px">
+        <h1 style="font-size:27px">GAS LMS</h1>
+        <span class="chip chip-green"><i data-lucide="zap"></i>TKJ</span>
+      </div>
+      <p class="text-sm text-muted mt-sm">Platform Pembelajaran Terpadu &amp; Gamifikasi TKJ</p>
+      <span class="chip chip-primary mt-sm"><i data-lucide="graduation-cap"></i>SMK HKTI 2 Purwareja Klampok</span>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label class="label" for="inpNomorInduk">NISN / NIP atau Email Akun Belajar</label>
+        <div class="input-icon">
+          <i data-lucide="id-card"></i>
+          <input class="input" id="inpNomorInduk" name="nomorInduk" type="text"
+                 autocomplete="username" inputmode="text" required
+                 placeholder="0064128901 atau nama@smkhkti2.sch.id"
+                 aria-describedby="errLogin">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="inpSandi">Kata Sandi</label>
+        <div class="input-icon">
+          <i data-lucide="lock"></i>
+          <input class="input" id="inpSandi" name="sandi" type="password"
+                 autocomplete="current-password" required placeholder="••••••••">
+          <button class="trail" type="button" id="btnLihatSandi"
+                  aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+        </div>
+        <p class="err" id="errLogin"><i data-lucide="alert-circle" style="width:13px;height:13px"></i><span></span></p>
+      </div>
+
+      <div class="row-between mb-md">
+        <label class="check" style="padding:0">
+          <input type="checkbox" id="inpIngat">
+          <span class="check-text">Ingat saya</span>
+        </label>
+        <button type="button" id="btnLupaSandi"
+                style="border:none;background:none;color:var(--primary);font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit">
+          Lupa Kata Sandi?
+        </button>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="submit" id="btnMasuk">
+        Masuk ke Sistem <i data-lucide="arrow-right"></i>
+      </button>
+    </form>
+
+    <div class="auth-divider" id="authDivider">ATAU MASUK DENGAN</div>
+
+    <!-- Tombol resmi Google Identity Services dirender ke sini oleh app.js
+         apabila CONFIG.GOOGLE_CLIENT_ID sudah diisi. -->
+    <div id="gsiButton" class="gsi-wrap"></div>
+
+    <!-- Cadangan bila GIS belum dikonfigurasi; disembunyikan oleh app.js. -->
+    <button class="btn btn-secondary btn-block hide" type="button" id="btnGoogle">
+      <i data-lucide="chrome"></i> Masuk dengan Akun Google Sekolah
+    </button>
+
+    <div class="auth-note">
+      <i data-lucide="shield-check"></i>
+      <span>Hanya akun yang terdaftar dalam basis data sekolah yang dapat mengakses
+      sistem laboratorium jaringan &amp; penugasan.</span>
+    </div>
+
+    <div class="text-center mt-md">
+      <button class="btn btn-ghost btn-sm" type="button" id="btnUjiKoneksi" onclick="ujiKoneksi()">
+        <i data-lucide="activity"></i> Uji Koneksi ke Server
+      </button>
+    </div>
+
+    <p class="text-xs text-muted text-center mt-lg" style="line-height:17px">
+      © 2026 Program Keahlian Teknik Komputer &amp; Jaringan<br>
+      SMK HKTI 2 Purwareja Klampok · Versi <span id="appVersi">2.0</span>
+    </p>
+  </div>
+</div>
+
+<!-- ══ Aplikasi utama ══════════════════════════════════════════════════ -->
+<div id="appScreen" class="app-shell hide">
+
+  <div class="sidebar-scrim" id="navScrim"></div>
+
+  <div class="app-frame">
+
+    <nav class="sidebar" id="sidebar" aria-label="Navigasi utama">
+      <div class="sidebar-brand">
+        <div class="brand-mark">R</div>
+        <div class="grow">
+          <div class="brand-name">GAS LMS</div>
+          <div class="brand-sub" id="brandSub">SMK HKTI 2 KLAMPOK</div>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav" id="navList"></ul>
+
+      <div class="nav-promo" id="navPromo"></div>
+
+      <div class="sidebar-foot">
+        <div class="avatar" id="navAvatar">?</div>
+        <div class="grow" style="min-width:0">
+          <div class="truncate nav-user-name" id="navNama">—</div>
+          <div class="truncate nav-user-role" id="navPeran">—</div>
+        </div>
+        <button class="icon-btn" id="btnKeluar" title="Keluar" aria-label="Keluar dari sistem">
+          <i data-lucide="log-out"></i>
+        </button>
+      </div>
+    </nav>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn hide-desktop" id="btnMenu" aria-label="Buka menu navigasi">
+          <i data-lucide="menu"></i>
+        </button>
+        <span class="topbar-title" id="topbarTitle">Dashboard</span>
+
+        <span class="chip chip-exp hide-mobile" id="chipStreak" title="Streak belajar">
+          <i data-lucide="flame"></i><span id="streakVal">0</span> Hari
+        </span>
+        <span class="chip chip-exp hide-mobile" id="chipExp" title="Total EXP">
+          <span class="tnum" id="expVal">0</span>&nbsp;EXP
+        </span>
+
+        <button class="icon-btn" id="btnTema" aria-label="Ganti mode terang / gelap">
+          <i data-lucide="moon"></i>
+        </button>
+        <button class="icon-btn" id="btnNotif" aria-label="Notifikasi">
+          <i data-lucide="bell"></i>
+          <span class="dot-alert hide" id="notifDot"></span>
+        </button>
+      </header>
+
+      <main id="app-container" class="page" role="main" aria-live="polite"></main>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav" id="bottomNav" aria-label="Navigasi cepat"></nav>
+</div>
+
+<!-- ══ Modal serbaguna ═════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="modalBox">
+    <div class="modal-head">
+      <h2 id="modalTitle" style="font-size:16px">Judul</h2>
+      <button class="icon-btn" id="modalClose" aria-label="Tutup"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<!-- ══ Modal pratinjau berkas ══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="previewBackdrop" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <h2 id="previewTitle" style="font-size:16px">Pratinjau Dokumen</h2>
+      <button class="icon-btn" id="previewClose" aria-label="Tutup pratinjau"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body text-center" id="previewBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="previewTutup"><i data-lucide="x"></i> Tutup</button>
+      <a class="btn btn-primary" id="previewUnduh" href="#" target="_blank" rel="noopener">
+        <i data-lucide="download"></i> Unduh
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-host" id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ══ Skrip aplikasi ══════════════════════════════════════════════════
+     Urutan ini wajib: config → api → app (state, router) → views → actions.
+     ═══════════════════════════════════════════════════════════════════ -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/views.js"></script>
+<script src="js/views2.js"></script>
+<script src="js/views3.js"></script>
+<script src="js/actions.js"></script>
+</body>
+</html>
