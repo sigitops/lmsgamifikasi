@@ -9,7 +9,7 @@
    3. Seluruh data awal ditarik   → satu kali lewat getInitialAppData().
    4. Tidak ada window.location / URL parameter di mana pun.
    5. Komunikasi ke backend lewat fetch (js/api.js), bukan google.script.run,
-      karena frontend kini berdiri sendiri di GitHub Pages.
+      karena frontend kini berdiri sendiri di hosting statis.
    ========================================================================== */
 
 /* ── 1. STATE APLIKASI ──────────────────────────────────────────────── */
@@ -255,7 +255,7 @@ function tutupPratinjau() {
 /**
  * Satu pintu ke backend. Bentuk pemanggilannya sengaja dipertahankan sama
  * persis seperti versi google.script.run, sehingga seluruh halaman dan
- * formulir tidak perlu diubah sama sekali saat pindah ke GitHub Pages —
+ * formulir tidak perlu diubah sama sekali saat pindah ke hosting statis —
  * hanya isi fungsi ini yang berganti dari RPC menjadi HTTP.
  *
  * Token sesi dikirim di dalam badan permintaan oleh apiCall(), bukan sebagai
@@ -430,6 +430,52 @@ function pasangFormLogin() {
   if (ingat) { $('#inpNomorInduk').value = ingat; $('#inpIngat').checked = true; }
 }
 
+/**
+ * Tiga tautan pada bilah atas layar masuk, ditambah "Hubungi admin sekolah"
+ * pada kaki kartu. Semuanya membuka modal, bukan tautan kosong: tautan yang
+ * tidak menuju ke mana-mana lebih membingungkan daripada tidak ada tautan.
+ */
+function bukaInfoAuth(jenis) {
+  const daftar = {
+    tentang: {
+      judul: 'Tentang GAS LMS',
+      isi:
+        '<p class="text-sm">GAS LMS adalah platform pembelajaran dan gamifikasi milik Program Keahlian ' +
+        'Teknik Komputer &amp; Jaringan, SMK HKTI 2 Purwareja Klampok. Materi, tugas, kuis, dan penilaian ' +
+        'dikelola di satu tempat, sementara capaian siswa dicatat sebagai EXP, level, dan badge.</p>' +
+        '<div class="auth-note mt-md"><i data-lucide="shield-check"></i><span>Hanya akun yang terdaftar ' +
+        'di basis data sekolah yang dapat masuk. Pendaftaran akun dilakukan oleh Admin TKJ, bukan ' +
+        'lewat pendaftaran mandiri.</span></div>'
+    },
+    fitur: {
+      judul: 'Fitur Utama',
+      isi:
+        '<ul class="text-sm" style="padding-left:18px;display:flex;flex-direction:column;gap:9px">' +
+        '<li><strong>Materi terpusat</strong> — modul, jobsheet, slide, dan video praktik tersusun per ' +
+        'mata pelajaran dan pertemuan.</li>' +
+        '<li><strong>Tugas &amp; kuis</strong> — pengumpulan berkas, penilaian, dan umpan balik guru ' +
+        'dalam satu alur.</li>' +
+        '<li><strong>Gamifikasi</strong> — EXP, level, badge, streak harian, dan papan peringkat kelas.</li>' +
+        '<li><strong>Monitoring progres</strong> — rekap capaian per siswa dan per kelas untuk guru ' +
+        'serta kepala program.</li>' +
+        '</ul>'
+    },
+    bantuan: {
+      judul: 'Bantuan Masuk',
+      isi:
+        '<p class="text-sm">Akun dibuat oleh Admin TKJ. Siswa masuk dengan <strong>NISN</strong>, guru ' +
+        'dan staf dengan <strong>NIP</strong>. Tombol Google hanya berfungsi bila alamat surel Anda ' +
+        'sudah terdaftar pada akun tersebut.</p>' +
+        '<div class="auth-note mt-md"><i data-lucide="mail"></i><span>Lupa kata sandi atau belum punya ' +
+        'akun? Hubungi Admin TKJ lewat wali kelas, atau surel <strong>admin@smkhkti2.sch.id</strong> ' +
+        'dengan menyertakan nama lengkap dan NISN/NIP.</span></div>'
+    }
+  };
+
+  const d = daftar[jenis] || daftar.tentang;
+  bukaModal({ judul: d.judul, isi: d.isi, tombol: [{ teks: 'Tutup', kelas: 'btn-primary' }] });
+}
+
 /* ── 7b. MASUK DENGAN AKUN GOOGLE (Google Identity Services) ────────── */
 
 /** Memuat skrip pihak ketiga sekali saja. */
@@ -523,7 +569,7 @@ function mulaiSesi(data) {
 }
 
 /**
- * Di GitHub Pages, memuat ulang halaman adalah hal biasa — beda dengan iframe
+ * Di hosting statis, memuat ulang halaman adalah hal biasa, beda dengan iframe
  * Apps Script dulu. Tanpa pemulihan sesi, setiap F5 akan melempar pengguna
  * kembali ke layar masuk. Token disimpan di localStorage dengan umur yang
  * disamakan dengan masa berlaku sesi di backend (8 jam).
