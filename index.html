@@ -29,86 +29,222 @@
   <p class="text-sm text-muted">Menyiapkan ruang belajar…</p>
 </div>
 
-<!-- ══ Layar autentikasi ═══════════════════════════════════════════════ -->
+<!-- ══ Layar autentikasi ═══════════════════════════════════════════════
+     Tata letak split-screen: panel pengantar di kiri, kartu masuk di kanan.
+     Di bawah 960px keduanya ditumpuk dan kartu naik ke atas, karena pada
+     layar kecil yang dicari pengguna adalah kolom isian, bukan pengantar.
+     ═══════════════════════════════════════════════════════════════════ -->
 <div id="authScreen" class="auth-wrap hide">
-  <div class="auth-card">
-    <div class="auth-mark">R</div>
-    <div class="text-center mb-md">
-      <div class="row" style="justify-content:center;gap:8px">
-        <h1 style="font-size:27px">GAS LMS</h1>
-        <span class="chip chip-green"><i data-lucide="zap"></i>TKJ</span>
+  <div class="auth-shell">
+
+    <header class="auth-topbar">
+      <div class="auth-brand">
+        <span class="auth-logo" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+        <span class="auth-brand-txt">
+          <span class="auth-brand-name">GAS LMS</span>
+          <span class="auth-brand-sub">SMK HKTI 2 Purwareja Klampok</span>
+        </span>
       </div>
-      <p class="text-sm text-muted mt-sm">Platform Pembelajaran Terpadu &amp; Gamifikasi TKJ</p>
-      <span class="chip chip-primary mt-sm"><i data-lucide="graduation-cap"></i>SMK HKTI 2 Purwareja Klampok</span>
+      <nav class="auth-nav" aria-label="Informasi aplikasi">
+        <button type="button" class="auth-nav-link" onclick="bukaInfoAuth('tentang')">Tentang</button>
+        <button type="button" class="auth-nav-link" onclick="bukaInfoAuth('fitur')">Fitur</button>
+        <button type="button" class="auth-nav-link" onclick="bukaInfoAuth('bantuan')">Bantuan</button>
+      </nav>
+    </header>
+
+    <div class="auth-body">
+
+      <!-- ── Panel pengantar ───────────────────────────────────────── -->
+      <section class="auth-hero">
+        <p class="auth-eyebrow">Learning Management System</p>
+        <h1 class="auth-title">Selamat Datang<br>di <span>GAS LMS</span></h1>
+        <p class="auth-lead">Platform pembelajaran digital untuk siswa dan guru TKJ.</p>
+
+        <ul class="auth-feats">
+          <li class="auth-feat">
+            <span class="auth-feat-ico"><i data-lucide="book-open"></i></span>
+            <div class="auth-feat-txt">
+              <h2>Materi Terpusat</h2>
+              <p>Akses seluruh materi pembelajaran TKJ dalam satu platform yang terstruktur.</p>
+            </div>
+          </li>
+          <li class="auth-feat">
+            <span class="auth-feat-ico auth-feat-ico-mint"><i data-lucide="gamepad-2"></i></span>
+            <div class="auth-feat-txt">
+              <h2>Gamifikasi Pembelajaran</h2>
+              <p>Raih EXP, level, dan badge untuk pengalaman belajar yang lebih menyenangkan.</p>
+            </div>
+          </li>
+          <li class="auth-feat">
+            <span class="auth-feat-ico auth-feat-ico-peach"><i data-lucide="bar-chart-3"></i></span>
+            <div class="auth-feat-txt">
+              <h2>Monitoring Progres Belajar</h2>
+              <p>Pantau perkembangan belajar secara berkala dan terukur.</p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Ilustrasi digambar sebagai SVG sebaris, bukan foto. Jaringan
+             sekolah kerap memblokir CDN, dan gambar adalah aset terberat
+             di jalur render layar masuk. -->
+        <div class="auth-art" aria-hidden="true">
+          <svg viewBox="0 0 520 212" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
+            <defs>
+              <radialGradient id="authGlow" cx="50%" cy="52%" r="52%">
+                <stop offset="0%"   class="auth-art-glow-0"/>
+                <stop offset="62%"  class="auth-art-glow-1"/>
+                <stop offset="100%" class="auth-art-glow-2"/>
+              </radialGradient>
+            </defs>
+            <ellipse cx="262" cy="116" rx="240" ry="106" fill="url(#authGlow)"/>
+            <ellipse cx="262" cy="185" rx="222" ry="13" fill="var(--primary-soft)" opacity=".55"/>
+
+            <!-- Tumpukan buku -->
+            <g>
+              <rect x="30"  y="161" width="166" height="17" rx="3.5" fill="var(--pastel-sky)"/>
+              <rect x="176" y="161" width="20"  height="17" rx="3.5" fill="var(--surface)"/>
+              <text x="41" y="172.5" class="auth-art-label">Jaringan Komputer</text>
+
+              <rect x="38"  y="145" width="150" height="16" rx="3.5" fill="var(--pastel-peach)"/>
+              <rect x="170" y="145" width="18"  height="16" rx="3.5" fill="var(--surface)"/>
+              <text x="49" y="156.3" class="auth-art-label">Mikrotik RouterOS</text>
+
+              <rect x="34"  y="129" width="158" height="16" rx="3.5" fill="var(--pastel-mint)"/>
+              <rect x="174" y="129" width="18"  height="16" rx="3.5" fill="var(--surface)"/>
+              <text x="45" y="140.3" class="auth-art-label">Sistem Operasi Jaringan</text>
+
+              <rect x="44"  y="113" width="140" height="16" rx="3.5" fill="var(--pastel-lilac)"/>
+              <rect x="166" y="113" width="18"  height="16" rx="3.5" fill="var(--surface)"/>
+              <text x="55" y="124.3" class="auth-art-label">Keamanan Jaringan</text>
+            </g>
+
+            <!-- Laptop -->
+            <g>
+              <rect x="236" y="84" width="152" height="86" rx="7" fill="var(--primary)"/>
+              <rect x="243" y="91" width="138" height="66" rx="4" fill="var(--surface)"/>
+              <rect x="253" y="101" width="58" height="6"  rx="3" fill="var(--pastel-lilac)"/>
+              <rect x="253" y="113" width="96" height="5"  rx="2.5" fill="var(--surface-tint)"/>
+              <rect x="253" y="124" width="76" height="5"  rx="2.5" fill="var(--surface-tint)"/>
+              <rect x="253" y="135" width="44" height="10" rx="5" fill="var(--secondary)" opacity=".55"/>
+              <path d="M222 170h180l10 9H212z" fill="var(--border-strong)"/>
+              <rect x="292" y="172.5" width="40" height="3" rx="1.5" fill="var(--surface)" opacity=".8"/>
+            </g>
+
+            <!-- Gelas pena -->
+            <g>
+              <rect x="416" y="128" width="5" height="22" rx="2.5" fill="var(--tertiary)"/>
+              <rect x="425" y="120" width="5" height="30" rx="2.5" fill="var(--danger)"/>
+              <rect x="434" y="132" width="5" height="18" rx="2.5" fill="var(--secondary)"/>
+              <path d="M410 146h35l-3 32h-29z" fill="var(--pastel-lilac)"/>
+              <rect x="408" y="142" width="39" height="8" rx="4" fill="var(--surface)"/>
+            </g>
+
+            <!-- Tanaman -->
+            <g>
+              <ellipse cx="478" cy="128" rx="9"  ry="17" fill="var(--secondary)" opacity=".75"/>
+              <ellipse cx="466" cy="137" rx="14" ry="9"  fill="var(--secondary)" opacity=".55"
+                       transform="rotate(-24 466 137)"/>
+              <ellipse cx="491" cy="138" rx="13" ry="8"  fill="var(--secondary)" opacity=".55"
+                       transform="rotate(22 491 138)"/>
+              <path d="M462 150h33l-4 28h-25z" fill="var(--pastel-peach)"/>
+              <rect x="459" y="146" width="39" height="8" rx="4" fill="var(--surface)"/>
+            </g>
+
+            <rect x="24" y="177" width="476" height="2.5" rx="1.25" fill="var(--border-strong)"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ── Kartu masuk ───────────────────────────────────────────── -->
+      <section class="auth-panel">
+        <div class="auth-card">
+
+          <div class="auth-card-brand">
+            <span class="auth-logo auth-logo-lg" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+            <span class="auth-brand-name">GAS LMS</span>
+            <span class="auth-brand-sub">SMK HKTI 2 Purwareja Klampok</span>
+          </div>
+
+          <h2 class="auth-card-title">Selamat Datang Kembali</h2>
+          <p class="auth-card-sub">Masuk ke akun Anda untuk melanjutkan pembelajaran di GAS LMS.</p>
+
+          <!-- Tombol resmi Google Identity Services dirender ke sini oleh app.js
+               apabila CONFIG.GOOGLE_CLIENT_ID sudah diisi. -->
+          <div id="gsiButton" class="gsi-wrap"></div>
+
+          <!-- Cadangan bila GIS belum dikonfigurasi; disembunyikan oleh app.js. -->
+          <button class="btn-google hide" type="button" id="btnGoogle">
+            <svg class="btn-google-g" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.2 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.77 24c0-1.6.27-3.15.76-4.59l-7.98-6.19A23.96 23.96 0 0 0 0 24c0 3.88.93 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Masuk dengan Google
+          </button>
+
+          <div class="auth-divider" id="authDivider"><span>atau</span></div>
+
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label class="label" for="inpNomorInduk">NISN / NIP atau Email Akun Belajar</label>
+              <div class="input-icon">
+                <i data-lucide="id-card"></i>
+                <input class="input" id="inpNomorInduk" name="nomorInduk" type="text"
+                       autocomplete="username" inputmode="text" required
+                       placeholder="0064128901 atau nama@smkhkti2.sch.id"
+                       aria-describedby="errLogin">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="inpSandi">Kata Sandi</label>
+              <div class="input-icon">
+                <i data-lucide="lock"></i>
+                <input class="input" id="inpSandi" name="sandi" type="password"
+                       autocomplete="current-password" required placeholder="Masukkan kata sandi Anda">
+                <button class="trail" type="button" id="btnLihatSandi"
+                        aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+              </div>
+              <p class="err" id="errLogin"><i data-lucide="alert-circle" style="width:13px;height:13px"></i><span></span></p>
+            </div>
+
+            <div class="row-between auth-row-opsi">
+              <label class="check" style="padding:0">
+                <input type="checkbox" id="inpIngat">
+                <span class="check-text">Ingat saya</span>
+              </label>
+              <button type="button" id="btnLupaSandi" class="auth-link">Lupa password?</button>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="submit" id="btnMasuk">
+              Masuk <i data-lucide="arrow-right"></i>
+            </button>
+          </form>
+
+          <div class="auth-card-foot">
+            <p>Belum punya akun?</p>
+            <button type="button" class="auth-link" onclick="bukaInfoAuth('bantuan')">Hubungi admin sekolah</button>
+          </div>
+
+        </div>
+      </section>
+
     </div>
 
-    <form id="loginForm" novalidate>
-      <div class="field">
-        <label class="label" for="inpNomorInduk">NISN / NIP atau Email Akun Belajar</label>
-        <div class="input-icon">
-          <i data-lucide="id-card"></i>
-          <input class="input" id="inpNomorInduk" name="nomorInduk" type="text"
-                 autocomplete="username" inputmode="text" required
-                 placeholder="0064128901 atau nama@smkhkti2.sch.id"
-                 aria-describedby="errLogin">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label" for="inpSandi">Kata Sandi</label>
-        <div class="input-icon">
-          <i data-lucide="lock"></i>
-          <input class="input" id="inpSandi" name="sandi" type="password"
-                 autocomplete="current-password" required placeholder="••••••••">
-          <button class="trail" type="button" id="btnLihatSandi"
-                  aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
-        </div>
-        <p class="err" id="errLogin"><i data-lucide="alert-circle" style="width:13px;height:13px"></i><span></span></p>
-      </div>
-
-      <div class="row-between mb-md">
-        <label class="check" style="padding:0">
-          <input type="checkbox" id="inpIngat">
-          <span class="check-text">Ingat saya</span>
-        </label>
-        <button type="button" id="btnLupaSandi"
-                style="border:none;background:none;color:var(--primary);font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit">
-          Lupa Kata Sandi?
+    <footer class="auth-foot">
+      <p>© 2026 GAS LMS · SMK HKTI 2 Purwareja Klampok</p>
+      <div class="auth-foot-links">
+        <button type="button" id="btnUjiKoneksi" class="auth-foot-link" onclick="ujiKoneksi()">
+          <i data-lucide="activity"></i> Uji Koneksi
         </button>
+        <span class="auth-foot-sep" aria-hidden="true">·</span>
+        <button type="button" class="auth-foot-link" onclick="bukaInfoAuth('bantuan')">Bantuan</button>
+        <span class="auth-foot-sep" aria-hidden="true">·</span>
+        <span class="auth-foot-ver">Versi <span id="appVersi">2.0</span></span>
       </div>
+    </footer>
 
-      <button class="btn btn-primary btn-block" type="submit" id="btnMasuk">
-        Masuk ke Sistem <i data-lucide="arrow-right"></i>
-      </button>
-    </form>
-
-    <div class="auth-divider" id="authDivider">ATAU MASUK DENGAN</div>
-
-    <!-- Tombol resmi Google Identity Services dirender ke sini oleh app.js
-         apabila CONFIG.GOOGLE_CLIENT_ID sudah diisi. -->
-    <div id="gsiButton" class="gsi-wrap"></div>
-
-    <!-- Cadangan bila GIS belum dikonfigurasi; disembunyikan oleh app.js. -->
-    <button class="btn btn-secondary btn-block hide" type="button" id="btnGoogle">
-      <i data-lucide="chrome"></i> Masuk dengan Akun Google Sekolah
-    </button>
-
-    <div class="auth-note">
-      <i data-lucide="shield-check"></i>
-      <span>Hanya akun yang terdaftar dalam basis data sekolah yang dapat mengakses
-      sistem laboratorium jaringan &amp; penugasan.</span>
-    </div>
-
-    <div class="text-center mt-md">
-      <button class="btn btn-ghost btn-sm" type="button" id="btnUjiKoneksi" onclick="ujiKoneksi()">
-        <i data-lucide="activity"></i> Uji Koneksi ke Server
-      </button>
-    </div>
-
-    <p class="text-xs text-muted text-center mt-lg" style="line-height:17px">
-      © 2026 Program Keahlian Teknik Komputer &amp; Jaringan<br>
-      SMK HKTI 2 Purwareja Klampok · Versi <span id="appVersi">2.0</span>
-    </p>
   </div>
 </div>
 
