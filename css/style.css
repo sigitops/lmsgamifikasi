@@ -867,40 +867,229 @@ tbody tr:hover { background: var(--surface-alt); }
   width: 7px; height: 7px; border-radius: 50%; background: var(--danger);
 }
 
-/* ── 24. HALAMAN LOGIN ───────────────────────────────────────────────── */
+/* ── 24. HALAMAN LOGIN ───────────────────────────────────────────────
+   Tata letak split-screen: panel pengantar + kartu masuk di dalam satu
+   wadah mengambang. Seluruh aturan di bagian ini berawalan .auth- dan
+   hanya hidup di dalam #authScreen, jadi tidak menyentuh halaman lain.
+   Pengecualian: .auth-note juga dipakai oleh modal "Lupa Kata Sandi"
+   dan modal ganti sandi, sehingga aturannya dipertahankan apa adanya.
+   ──────────────────────────────────────────────────────────────────── */
 .auth-wrap {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: var(--sp-lg) var(--sp-md);
 }
-.auth-card {
-  width: 100%; max-width: 440px;
-  background: var(--surface);
+.auth-shell {
+  width: 100%; max-width: 1180px;
+  display: flex; flex-direction: column;
+  background: var(--frame);
   border-radius: var(--r-frame);
   box-shadow: var(--elev-frame);
-  padding: var(--sp-xl) var(--sp-lg);
+  overflow: hidden;
 }
-.auth-mark {
-  width: 60px; height: 60px; margin: 0 auto 16px;
-  border-radius: 19px;
+
+/* Bilah atas */
+.auth-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
+  padding: 15px var(--sp-xl);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.auth-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.auth-logo {
+  width: 38px; height: 38px; flex: none;
+  border-radius: 12px;
   background: linear-gradient(140deg, var(--primary), #AE93FF);
   color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 25px; font-weight: 800;
-  box-shadow: 0 14px 28px -12px var(--primary);
+  box-shadow: 0 9px 18px -9px var(--primary);
+}
+.auth-logo svg { width: 21px; height: 21px; }
+.auth-logo-lg { width: 46px; height: 46px; border-radius: 15px; margin-bottom: 10px; }
+.auth-logo-lg svg { width: 25px; height: 25px; }
+.auth-brand-txt { display: flex; flex-direction: column; min-width: 0; }
+.auth-brand-name {
+  font-size: 17px; font-weight: 800; letter-spacing: -.015em;
+  color: var(--text); line-height: 1.2;
+}
+.auth-brand-sub { font-size: 10.5px; color: var(--text-muted); line-height: 1.35; }
+.auth-nav { display: flex; align-items: center; gap: 2px; }
+.auth-nav-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 14px; border: none; background: none; border-radius: var(--r-ctrl);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  transition: color .18s ease, background-color .18s ease;
+}
+.auth-nav-link:hover { color: var(--primary); background: var(--primary-softer); }
+
+/* Badan dua kolom */
+.auth-body { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); }
+
+/* Panel pengantar */
+.auth-hero {
+  display: flex; flex-direction: column; min-width: 0;
+  padding: var(--sp-xl) var(--sp-sm) 0 var(--sp-xl);
+}
+.auth-eyebrow {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 13px;
+}
+.auth-title {
+  font-size: clamp(30px, 3.2vw, 43px); line-height: 1.1;
+  font-weight: 800; letter-spacing: -.028em; color: var(--text);
+  margin-bottom: 11px;
+}
+.auth-title span { color: var(--primary); }
+.auth-lead {
+  font-size: 14.5px; line-height: 1.55; color: var(--text-muted);
+  max-width: 40ch; margin-bottom: 26px;
+}
+.auth-feats { list-style: none; display: flex; flex-direction: column; gap: 17px; margin: 0; padding: 0; }
+.auth-feat { display: flex; gap: 14px; align-items: flex-start; }
+.auth-feat-ico {
+  width: 42px; height: 42px; flex: none; border-radius: 13px;
+  background: var(--pastel-lilac); color: var(--pastel-lilac-ink);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-feat-ico svg { width: 20px; height: 20px; }
+.auth-feat-ico-mint  { background: var(--pastel-mint);  color: var(--pastel-mint-ink); }
+.auth-feat-ico-peach { background: var(--pastel-peach); color: var(--pastel-peach-ink); }
+.auth-feat-txt { min-width: 0; }
+.auth-feat-txt h2 { font-size: 14.5px; font-weight: 700; color: var(--text); margin: 2px 0 3px; }
+.auth-feat-txt p  { font-size: 12.8px; line-height: 1.5; color: var(--text-muted); max-width: 42ch; }
+
+.auth-art { margin: auto 0 -22px -34px; padding-top: 26px; max-width: 640px; pointer-events: none; }
+.auth-art svg { display: block; width: 100%; height: auto; }
+.auth-art-label { font-size: 6.6px; font-weight: 600; fill: var(--text); opacity: .6; }
+.auth-art-glow-0 { stop-color: var(--primary); stop-opacity: .13; }
+.auth-art-glow-1 { stop-color: var(--primary); stop-opacity: .05; }
+.auth-art-glow-2 { stop-color: var(--primary); stop-opacity: 0; }
+
+/* Kartu masuk */
+.auth-panel { display: flex; align-items: center; justify-content: center; padding: var(--sp-xl); min-width: 0; }
+.auth-card {
+  width: 100%; max-width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  box-shadow: var(--elev-2);
+  padding: 30px 28px;
+}
+.auth-card-brand { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 18px; }
+.auth-card-brand .auth-brand-name { font-size: 18px; }
+.auth-card-title {
+  font-size: 21px; font-weight: 800; letter-spacing: -.02em;
+  text-align: center; margin-bottom: 6px; line-height: 1.25;
+}
+.auth-card-sub {
+  font-size: 12.8px; line-height: 1.5; color: var(--text-muted);
+  text-align: center; margin-bottom: 18px;
 }
 .auth-divider {
   display: flex; align-items: center; gap: 12px;
   margin: var(--sp-md) 0;
-  color: var(--text-faint); font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+  color: var(--text-faint); font-size: 11.5px; font-weight: 600;
 }
 .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.btn-google {
+  width: 100%; min-height: 46px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--r-ctrl);
+  font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+.btn-google:hover { background: var(--surface-alt); border-color: var(--primary-ring); }
+.btn-google-g { width: 18px; height: 18px; flex: none; }
+
+.auth-row-opsi { margin-bottom: var(--sp-md); }
+.auth-link {
+  display: inline-flex; align-items: center; min-height: 34px;
+  padding: 0 6px; margin: 0 -6px;
+  border: none; background: none; border-radius: 9px;
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--primary); cursor: pointer;
+}
+.auth-link:hover { text-decoration: underline; }
+.auth-card-foot {
+  margin-top: 18px; padding-top: 15px;
+  border-top: 1px solid var(--border); text-align: center;
+}
+.auth-card-foot p { font-size: 12.5px; color: var(--text-muted); margin-bottom: 2px; }
+
+/* Kaki halaman */
+.auth-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sp-sm) var(--sp-md); flex-wrap: wrap;
+  padding: 10px var(--sp-xl);
+  background: var(--surface); border-top: 1px solid var(--border);
+  font-size: 11.5px; color: var(--text-muted);
+}
+.auth-foot-links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.auth-foot-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 36px; padding: 0 10px;
+  border: none; background: none; border-radius: 9px;
+  font-family: inherit; font-size: 11.5px; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  transition: color .18s ease, background-color .18s ease;
+}
+.auth-foot-link:hover { color: var(--primary); background: var(--primary-softer); }
+.auth-foot-link svg { width: 14px; height: 14px; }
+.auth-foot-link:disabled { opacity: .6; cursor: default; }
+.auth-foot-sep, .auth-foot-ver { color: var(--text-faint); }
+
+/* Dipakai juga oleh modal lupa sandi & ganti sandi — jangan dihapus. */
 .auth-note {
   display: flex; gap: 10px; margin-top: var(--sp-md); padding: 13px;
   background: var(--primary-softer); border-radius: var(--r-inner);
   font-size: 11.5px; line-height: 17px; color: var(--text-muted);
 }
 .auth-note svg { width: 15px; height: 15px; flex: none; color: var(--primary); margin-top: 1px; }
+
+/* Layar sedang: satu kolom, kartu naik ke atas karena itu tujuan kunjungan. */
+@media (max-width: 1039.98px) {
+  .auth-body { grid-template-columns: minmax(0, 1fr); }
+  .auth-panel { order: 1; padding: var(--sp-xl) var(--sp-lg) var(--sp-sm); }
+  .auth-hero  { order: 2; padding: var(--sp-lg) var(--sp-xl) var(--sp-xl); align-items: center; text-align: center; }
+  .auth-lead  { margin-inline: auto; }
+  .auth-feats { max-width: 560px; width: 100%; }
+  .auth-feat  { text-align: left; }
+  .auth-art   { display: none; }
+}
+
+/* Telepon: bilah atas dan pengantar naratif dilepas, fitur jadi tiga ubin. */
+@media (max-width: 639.98px) {
+  .auth-wrap  { padding: 0; align-items: stretch; }
+  .auth-shell { max-width: none; min-height: 100vh; border-radius: 0; box-shadow: none; background: var(--surface); }
+  .auth-topbar { display: none; }
+  .auth-panel { padding: var(--sp-lg) var(--sp-md) 0; }
+  .auth-card  { max-width: none; border: none; box-shadow: none; padding: var(--sp-sm) var(--sp-xs); background: transparent; }
+  .auth-hero  { padding: var(--sp-lg) var(--sp-md); }
+  .auth-eyebrow, .auth-title, .auth-lead { display: none; }
+  .auth-feats { flex-direction: row; gap: 10px; max-width: none; }
+  .auth-feat {
+    flex: 1 1 0; min-width: 0; flex-direction: column; align-items: center;
+    text-align: center; gap: 8px; padding: 14px 7px;
+    background: var(--surface-alt); border-radius: var(--r-inner);
+  }
+  .auth-feat-ico { width: 38px; height: 38px; border-radius: 12px; }
+  .auth-feat-ico svg { width: 18px; height: 18px; }
+  .auth-feat-txt h2 { font-size: 11.5px; line-height: 1.35; margin: 0; }
+  .auth-feat-txt p  { display: none; }
+  .auth-foot {
+    flex-direction: column; gap: 4px; text-align: center;
+    padding: var(--sp-md) var(--sp-md) calc(var(--sp-md) + var(--safe-b));
+    background: transparent; border-top: none;
+  }
+}
+
+/* Desktop: tinggi disesuaikan dengan padding 18px pada body. */
+@media (min-width: 1024px) {
+  .auth-wrap { min-height: calc(100vh - 36px); padding: 0; }
+}
 
 /* ── 25. KEADAAN KOSONG & KERANGKA MUAT ──────────────────────────────── */
 .empty { text-align: center; padding: 46px var(--sp-md); }
@@ -1042,7 +1231,6 @@ tbody tr:hover { background: var(--surface-alt); }
   .toast-host { bottom: var(--sp-lg); }
   .hide-desktop { display: none !important; }
   .hero { padding: 30px 32px; }
-  .auth-wrap { padding: var(--sp-xl); }
 }
 
 @media (max-width: 1023.98px) {
